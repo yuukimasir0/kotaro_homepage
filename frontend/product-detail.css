@@ -1,0 +1,49 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    line-height: 1.6;
+    background-color: #f4f4f4;
+}
+
+main {
+    margin-top: 60px; /* ヘッダーの高さと同じに設定 */
+    padding: 20px;
+}
+
+.product-detail {
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    padding: 20px;
+    max-width: 600px;
+    margin: 20px auto;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+.product-detail img {
+    max-width: 100%;
+    border-radius: 8px;
+    margin-bottom: 20px;
+}
+
+.product-detail h1 {
+    font-size: 24px;
+    margin-bottom: 10px;
+}
+
+.product-detail p {
+    font-size: 18px;
+    margin-bottom: 10px;
+}
+
+.product-detail .price {
+    font-size: 20px;
+    color: #d9534f;
+    margin-bottom: 20px;
+}
