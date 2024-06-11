@@ -9,18 +9,38 @@
     <script src="script.js" defer></script>
 </head>
 <body>
+    <header>
+        <div class="header-container">
+            <div class="logo"><a href="index.html" style="color: #fff; text-decoration: none;">MyShop</a></div>
+            <div class="search-bar">
+                <input type="text" placeholder="商品を検索...">
+                <button>検索</button>
+            </div>
+            <div class="cart">
+                <a href="#"><i class="fas fa-shopping-cart"></i></a>
+                <span class="cart-count">0</span>
+            </div>
+            <div class="auth-buttons">
+                <button id="login-btn">ログイン</button>
+                <button id="signup-btn">サインアップ</button>
+            </div>
+            <div class="account" style="display: none;">
+                <a href="#">アカウント</a>
+            </div>
+        </div>
+    </header>
     <main>
-        <section class="hero-banner">
-            <h1>Welcome to MyShop</h1>
-            <p>模型販売店</p>
-        </section>
+        <div class="hero-banner">
+            <h1>Welcome to My Shop</h1>
+            <p>ここであなたの好きな商品を見つけましょう！</p>
+        </div>
         <div class="container">
             <aside class="categories">
                 <h2>カテゴリ</h2>
                 <ul>
-                    <li><a href="product-list.html?genre=trainA">カテゴリA ></a></li>
-                    <li><a href="product-list.html?genre=trainB">カテゴリB ></a></li>
-                    <li><a href="product-list.html?genre=trainC">カテゴリC ></a></li>
+                    <li><a href="product-list.html?genre=trainA">カテゴリA <span class="arrow">></span></a></li>
+                    <li><a href="product-list.html?genre=trainB">カテゴリB <span class="arrow">></span></a></li>
+                    <li><a href="product-list.html?genre=trainC">カテゴリC <span class="arrow">></span></a></li>
                 </ul>
             </aside>
             <section class="new-arrivals">

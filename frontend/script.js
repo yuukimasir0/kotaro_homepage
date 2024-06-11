@@ -52,7 +52,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function checkLogin() {
-        return true; // ここをfalseにするとログインしていない状態になります
+        return false; // ここをfalseにするとログインしていない状態になります
     }
 
     if (checkLogin()) {

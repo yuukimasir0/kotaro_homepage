@@ -85,6 +85,26 @@ main {
     margin-top: 60px; /* ヘッダーの高さと同じに設定 */
 }
 
+.hero-banner {
+    background: url('images/sample.jpg') no-repeat center center/cover; /* ここに背景画像のパスを指定 */
+    height: 300px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    color: #fff;
+    text-align: center;
+    width: 100%;
+}
+
+.hero-banner h1 {
+    font-size: 36px;
+}
+
+.hero-banner p {
+    font-size: 18px;
+}
+
 .container {
     display: flex;
     padding: 20px;
@@ -110,11 +130,17 @@ main {
 .categories ul li a {
     text-decoration: none;
     color: #333;
-    display: block;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     padding: 10px;
     border: 1px solid #ccc;
     border-radius: 5px;
     transition: background 0.3s;
+}
+
+.categories ul li a .arrow {
+    margin-left: auto;
 }
 
 .categories ul li a:hover {
