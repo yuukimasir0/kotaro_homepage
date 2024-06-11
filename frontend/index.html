@@ -6,6 +6,7 @@
     <title>ホーム</title>
     <link rel="stylesheet" href="styles.css">
     <script src="header-footer.js" defer></script>
+    <script src="script.js" defer></script>
 </head>
 <body>
     <main>
@@ -14,12 +15,10 @@
             <p>Welcome to My Shop</p>
         </div>
         <div class="container">
-            <aside class="categories">
+            <aside class="filters">
                 <h2>カテゴリ</h2>
-                <ul>
-                    <li><a href="product-list.html?genre=trainA">カテゴリA <span class="arrow">></span></a></li>
-                    <li><a href="product-list.html?genre=trainB">カテゴリB <span class="arrow">></span></a></li>
-                    <li><a href="product-list.html?genre=trainC">カテゴリC <span class="arrow">></span></a></li>
+                <ul class="category-list" id="category-list">
+                    <!-- カテゴリデータをここに動的に追加 -->
                 </ul>
             </aside>
             <section class="new-arrivals">
@@ -35,7 +34,6 @@
     </main>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            console.log("Fetching new arrivals...");  // デバッグメッセージ
             function fetchNewArrivals() {
                 fetch('/products/new')
                     .then(response => {

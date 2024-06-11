@@ -16,28 +16,6 @@ body {
     padding: 20px;
 }
 
-.filters {
-    width: 20%;
-    padding-right: 20px;
-}
-
-.filters h2 {
-    margin-bottom: 10px;
-}
-
-.filters label {
-    display: block;
-    margin-bottom: 5px;
-}
-
-.filters input, .filters select, .filters button {
-    width: 100%;
-    margin-bottom: 10px;
-    padding: 5px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-}
-
 .product-list {
     width: 80%;
 }
@@ -78,20 +56,69 @@ body {
 }
 
 .pagination {
-    text-align: center;
-    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 20px 0;
 }
 
 .pagination button {
-    padding: 10px 20px;
+    border: none;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
     margin: 0 5px;
-    border: 1px solid #007bff;
-    border-radius: 5px;
-    background-color: #007bff;
-    color: #fff;
+    background-color: #ddd;
+    color: #333;
+    font-size: 16px;
     cursor: pointer;
+    transition: background-color 0.3s;
 }
 
-.pagination button:hover {
-    background-color: #0056b3;
+.pagination button:disabled {
+    background-color: #333;
+    color: #fff;
+    cursor: default;
+}
+
+.pagination button:not(:disabled):hover {
+    background-color: #aaa;
+}
+
+.sort-options {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.sort-options #sort-order {
+    margin-left: 10px;
+    padding: 5px;
+}
+
+.sort-options label, .sort-options input, .sort-options button {
+    margin-left: 10px;
+    padding: 5px;
+}
+
+.product-list-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 5px; /* 隙間を減らす */
+}
+
+.product-list-header h2 {
+    font-size: 2em;
+}
+
+.product-list-header #total-products {
+    font-size: 1em;
+    color: #666;
+}
+
+hr {
+    border: none;
+    border-top: 2px solid #ddd;
+    margin: 5px 0;
 }

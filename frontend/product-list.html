@@ -6,6 +6,7 @@
     <title>商品一覧</title>
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="product-list.css">
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
     <script src="header-footer.js" defer></script>
     <script src="script.js" defer></script>
 </head>
@@ -13,28 +14,35 @@
     <main>
         <div class="container">
             <aside class="filters">
-                <h2>フィルター</h2>
-                <label for="genre">ジャンル:</label>
-                <select id="genre">
-                    <option value="all">すべて</option>
-                    <option value="trainA">カテゴリA</option>
-                    <option value="trainB">カテゴリB</option>
-                    <option value="trainC">カテゴリC</option>
-                </select>
-                <label for="min-price">最低価格:</label>
-                <input type="number" id="min-price" value="0">
-                <label for="max-price">最高価格:</label>
-                <input type="number" id="max-price" value="10000">
-                <button id="filter-button">フィルターを適用</button>
+                <h2>ジャンル</h2>
+                <ul class="category-list" id="category-list">
+                    <!-- カテゴリデータをここに動的に追加 -->
+                </ul>
             </aside>
             <section class="product-list">
-                <h2>商品一覧</h2>
+                <div class="product-list-header">
+                    <h2>商品一覧</h2>
+                    <span id="total-products"></span>
+                </div>
+                <hr>
+                <div class="sort-options">
+                    並び順:
+                    <select id="sort-order">
+                        <option value="newest">新着順</option>
+                        <option value="price-asc">価格の安い順</option>
+                        <option value="price-desc">価格の高い順</option>
+                    </select>
+                    <label for="min-price">最低価格:</label>
+                    <input type="number" id="min-price" value="0">
+                    <label for="max-price">最高価格:</label>
+                    <input type="number" id="max-price" value="10000">
+                    <button id="filter-button">フィルターを適用</button>
+                </div>
                 <div class="product-grid" id="product-list">
                     <!-- 商品カードがここに表示されます -->
                 </div>
                 <div class="pagination">
-                    <button id="prev-page">前のページ</button>
-                    <button id="next-page">次のページ</button>
+                    <!-- ページネーションボタンがここに表示されます -->
                 </div>
             </section>
         </div>

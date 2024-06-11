@@ -48,44 +48,81 @@ app.get('/products/:id', (req, res) => {
     });
 });
 
-// 商品一覧エンドポイント（フィルター対応）
+// 商品一覧エンドポイント
 app.get('/products', (req, res) => {
-    const { genre, minPrice, maxPrice, searchName, limit, offset } = req.query;
-    let query = 'SELECT id, name, image FROM products WHERE 1=1';
-    let params = [];
+    const { genre, subgenre, subsubgenre, minPrice, maxPrice, searchName, limit, offset, sort } = req.query;
+
+    let query = `
+        SELECT SQL_CALC_FOUND_ROWS p.*
+        FROM products p
+        JOIN categories c ON p.genre_id = c.id
+        WHERE 1=1
+    `;
+    const queryParams = [];
 
     if (genre && genre !== 'all') {
-        query += ' AND genre = ?';
-        params.push(genre);
+        query += ' AND c.genre = ?';
+        queryParams.push(genre);
+    }
+    if (subgenre) {
+        query += ' AND c.subgenre = ?';
+        queryParams.push(subgenre);
+    }
+    if (subsubgenre) {
+        query += ' AND c.subsubgenre = ?';
+        queryParams.push(subsubgenre);
     }
     if (minPrice) {
-        query += ' AND price >= ?';
-        params.push(minPrice);
+        query += ' AND p.price >= ?';
+        queryParams.push(minPrice);
     }
     if (maxPrice) {
-        query += ' AND price <= ?';
-        params.push(maxPrice);
+        query += ' AND p.price <= ?';
+        queryParams.push(maxPrice);
     }
     if (searchName) {
-        query += ' AND name LIKE ?';
-        params.push(`%${searchName}%`);
+        query += ' AND p.name LIKE ?';
+        queryParams.push(`%${searchName}%`);
     }
 
-    query += ' ORDER BY created_at DESC';
-    if (limit) {
-        query += ' LIMIT ?';
-        params.push(parseInt(limit));
-    }
-    if (offset) {
-        query += ' OFFSET ?';
-        params.push(parseInt(offset));
+    if (sort === 'price-asc') {
+        query += ' ORDER BY p.price ASC';
+    } else if (sort === 'price-desc') {
+        query += ' ORDER BY p.price DESC';
+    } else {
+        query += ' ORDER BY p.created_at DESC';
     }
 
-    db.query(query, params, (err, results) => {
-        if (err) return res.status(500).send({ message: 'データベースエラー' });
+    query += ' LIMIT ? OFFSET ?';
+    queryParams.push(parseInt(limit, 10));
+    queryParams.push(parseInt(offset, 10));
+
+    db.query(query, queryParams, (err, results) => {
+        if (err) throw err;
+
+        db.query('SELECT FOUND_ROWS() as total', (err, totalResults) => {
+            if (err) throw err;
+
+            const total = totalResults[0].total;
+            res.json({ products: results, total });
+        });
+    });
+});
+
+
+// カテゴリを取得するエンドポイント
+app.get('/categories', (req, res) => {
+    db.query('SELECT * FROM categories', (err, results) => {
+        if (err) {
+            console.error('Error fetching categories:', err);
+            res.status(500).send('Server Error');
+            return;
+        }
         res.json(results);
     });
 });
+
+
 
 // 静的ファイルの提供
 app.use(express.static(path.join(__dirname, '../frontend')));

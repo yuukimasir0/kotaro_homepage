@@ -1,61 +1,48 @@
 document.addEventListener('DOMContentLoaded', () => {
-    const emailForm = document.getElementById('emailForm');
-    const registerForm = document.getElementById('registerForm');
-    const emailVerifiedInput = document.getElementById('emailVerified');
-
-    const urlParams = new URLSearchParams(window.location.search);
-    const token = urlParams.get('token');
-    const email = urlParams.get('email');
-
-    if (token && email) {
-        fetch(`/verify-token?token=${token}&email=${email}`)
+    function fetchCategories() {
+        fetch('/categories')
             .then(response => response.json())
             .then(data => {
-                if (data.success) {
-                    emailVerifiedInput.value = email;
-                    document.querySelector('.email-verification').style.display = 'none';
-                    document.querySelector('.register').style.display = 'block';
-                } else {
-                    document.getElementById('responseMessage').textContent = '認証に失敗しました。';
-                }
-            });
-    }
+                const categoryList = document.getElementById('category-list');
+                categoryList.innerHTML = '';
+                const categories = data.reduce((acc, category) => {
+                    const { genre, subgenre, subsubgenre } = category;
+                    if (!acc[genre]) acc[genre] = { subgenres: {} };
+                    if (subgenre) {
+                        if (!acc[genre].subgenres[subgenre]) acc[genre].subgenres[subgenre] = [];
+                        if (subsubgenre) acc[genre].subgenres[subgenre].push(subsubgenre);
+                    }
+                    return acc;
+                }, {});
 
-    if (registerForm) {
-        registerForm.addEventListener('submit', async (event) => {
-            event.preventDefault();
-            
-            const formData = new FormData(registerForm);
-            const data = Object.fromEntries(formData.entries());
-            
-            try {
-                const response = await fetch('/register', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify(data)
-                });
-                
-                const result = await response.json();
-                const responseMessage = document.getElementById('registerResponseMessage');
-                
-                if (response.ok) {
-                    responseMessage.textContent = 'ユーザー登録が完了しました。';
-                } else {
-                    responseMessage.textContent = `エラー: ${result.message || 'ユーザー登録に失敗しました。'}`;
-                }
-            } catch (error) {
-                console.error('Error:', error);
-                const responseMessage = document.getElementById('registerResponseMessage');
-                responseMessage.textContent = 'サーバーエラーが発生しました。';
-            }
-        });
-    }
+                for (const [genre, { subgenres }] of Object.entries(categories)) {
+                    const genreItem = document.createElement('li');
+                    genreItem.innerHTML = `<a href="product-list.html?genre=${genre}">${genre}<span style="margin-left:auto;">＞</span></a>`;
+                    const subgenreList = document.createElement('ul');
+                    subgenreList.className = 'subcategory-list';
 
-    const productList = document.getElementById('product-list');
-    const itemsPerPage = 20; // 1ページあたりのアイテム数
-    let currentPage = 1;
+                    for (const [subgenre, subsubgenres] of Object.entries(subgenres)) {
+                        const subgenreItem = document.createElement('li');
+                        subgenreItem.innerHTML = `<a href="product-list.html?genre=${genre}&subgenre=${subgenre}">${subgenre}</a>`;
+                        const subsubgenreList = document.createElement('ul');
+                        subsubgenreList.className = 'subcategory-list';
+
+                        subsubgenres.forEach(subsubgenre => {
+                            const subsubgenreItem = document.createElement('li');
+                            subsubgenreItem.innerHTML = `<a href="product-list.html?genre=${genre}&subgenre=${subgenre}&subsubgenre=${subsubgenre}">${subsubgenre}</a>`;
+                            subsubgenreList.appendChild(subsubgenreItem);
+                        });
+
+                        subgenreItem.appendChild(subsubgenreList);
+                        subgenreList.appendChild(subgenreItem);
+                    }
+
+                    genreItem.appendChild(subgenreList);
+                    categoryList.appendChild(genreItem);
+                }
+            })
+            .catch(error => console.error('Error fetching categories:', error));
+    }
 
     function addProductCard(product) {
         const productCard = document.createElement('div');
@@ -67,79 +54,48 @@ document.addEventListener('DOMContentLoaded', () => {
         productCard.addEventListener('click', () => {
             window.location.href = `product-detail.html?id=${product.id}`;
         });
-        productList.appendChild(productCard);
+        document.getElementById('product-list').appendChild(productCard);
     }
 
     function fetchProducts() {
-        const genre = document.getElementById('genre') ? document.getElementById('genre').value : '';
+        const urlParams = new URLSearchParams(window.location.search);
+        const genre = urlParams.get('genre') || 'all';
+        const subgenre = urlParams.get('subgenre') || '';
+        const subsubgenre = urlParams.get('subsubgenre') || '';
         const minPrice = document.getElementById('min-price') ? document.getElementById('min-price').value : 0;
-        const maxPrice = document.getElementById('max-price') ? document.getElementById('max-price').value : 1000000000;
-        const searchName = new URLSearchParams(window.location.search).get('search') || '';
+        const maxPrice = document.getElementById('max-price') ? document.getElementById('max-price').value : 10000;
+        const searchName = urlParams.get('search') || '';
+        const sortOrder = document.getElementById('sort-order').value;
 
         const queryParams = new URLSearchParams({
             genre,
+            subgenre,
+            subsubgenre,
             minPrice,
             maxPrice,
             searchName,
-            limit: itemsPerPage,
-            offset: (currentPage - 1) * itemsPerPage
+            limit: 20, // 1ページあたりのアイテム数
+            offset: 0,
+            sort: sortOrder
         });
 
         fetch(`/products?${queryParams.toString()}`)
             .then(response => response.json())
-            .then(products => {
-                if (productList) {
-                    productList.innerHTML = '';
-                    products.forEach(addProductCard);
-                }
+            .then(data => {
+                const { products, total } = data;
+                const productList = document.getElementById('product-list');
+                productList.innerHTML = '';
+                products.forEach(addProductCard);
+
+                const totalProductsElement = document.getElementById('total-products');
+                totalProductsElement.textContent = `累計商品数: ${total}`;
             })
             .catch(error => console.error('Error fetching products:', error));
     }
 
-    const filterButton = document.getElementById('filter-button');
-    if (filterButton) {
-        filterButton.addEventListener('click', () => {
-            currentPage = 1;
-            fetchProducts();
-        });
-    }
-
-    const prevPageButton = document.getElementById('prev-page');
-    if (prevPageButton) {
-        prevPageButton.addEventListener('click', () => {
-            if (currentPage > 1) {
-                currentPage--;
-                fetchProducts();
-            }
-        });
-    }
-
-    const nextPageButton = document.getElementById('next-page');
-    if (nextPageButton) {
-        nextPageButton.addEventListener('click', () => {
-            currentPage++;
-            fetchProducts();
-        });
-    }
-
-    const genreSelect = document.getElementById('genre');
-    if (genreSelect) {
-        genreSelect.addEventListener('change', () => {
-            fetchProducts();
-        });
-    }
-
-    const genreParam = urlParams.get('genre');
-    if (genreSelect && genreParam) {
-        genreSelect.value = genreParam;
-    }
-
-    // 初回表示時に検索クエリが存在する場合はそのクエリを使って商品を検索
-    const initialSearchQuery = urlParams.get('search');
-    const headerSearchInput = document.getElementById('header-search-input');
-    if (headerSearchInput && initialSearchQuery) {
-        headerSearchInput.value = initialSearchQuery;
-    }
-
+    fetchCategories();
     fetchProducts();
+
+    document.getElementById('sort-order').addEventListener('change', fetchProducts);
+    document.getElementById('filter-button').addEventListener('click', fetchProducts);
 });
