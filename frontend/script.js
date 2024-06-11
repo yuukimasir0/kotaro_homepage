@@ -1,98 +1,7 @@
 document.addEventListener('DOMContentLoaded', () => {
-    const headerHTML = `
-        <header>
-            <div class="header-container">
-                <div class="logo"><a href="index.html" style="color: #fff; text-decoration: none;">MyShop</a></div>
-                <div class="search-bar">
-                    <input type="text" placeholder="商品を検索...">
-                    <button>検索</button>
-                </div>
-                <div class="cart">
-                    <a href="#"><i class="fas fa-shopping-cart"></i></a>
-                    <span class="cart-count">0</span>
-                </div>
-                <div class="auth-buttons">
-                    <button id="login-btn">ログイン</button>
-                    <button id="signup-btn">サインアップ</button>
-                </div>
-                <div class="account" style="display: none;">
-                    <a href="#">アカウント</a>
-                </div>
-            </div>
-        </header>
-    `;
-
-    const footerHTML = `
-        <footer>
-            <div class="footer-links">
-                <a href="#">お問い合わせ</a>
-                <a href="#">FAQ</a>
-                <a href="#">返品ポリシー</a>
-            </div>
-            <div class="social-media">
-                <a href="#">Facebook</a>
-                <a href="#">Twitter</a>
-                <a href="#">Instagram</a>
-            </div>
-            <div class="newsletter">
-                <input type="email" placeholder="メールアドレスを入力">
-                <button>登録</button>
-            </div>
-        </footer>
-    `;
-
-    document.body.insertAdjacentHTML('afterbegin', headerHTML);
-    document.body.insertAdjacentHTML('beforeend', footerHTML);
-
-    const signupButton = document.getElementById('signup-btn');
-    if (signupButton) {
-        signupButton.addEventListener('click', () => {
-            window.location.href = 'register.html';
-        });
-    }
-
-    function checkLogin() {
-        return false; // ここをfalseにするとログインしていない状態になります
-    }
-
-    if (checkLogin()) {
-        document.querySelector('.auth-buttons').style.display = 'none';
-        document.querySelector('.account').style.display = 'block';
-    } else {
-        document.querySelector('.auth-buttons').style.display = 'flex';
-        document.querySelector('.account').style.display = 'none';
-    }
-
     const emailForm = document.getElementById('emailForm');
     const registerForm = document.getElementById('registerForm');
     const emailVerifiedInput = document.getElementById('emailVerified');
-
-    if (emailForm) {
-        emailForm.addEventListener('submit', async (event) => {
-            event.preventDefault();
-            
-            const formData = new FormData(emailForm);
-            const email = formData.get('email');
-            
-            const response = await fetch('/verify-email', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ email })
-            });
-            
-            const result = await response.json();
-            const responseMessage = document.getElementById('responseMessage');
-            
-            if (response.ok) {
-                responseMessage.textContent = '認証メールが送信されました。メール内のリンクをクリックして認証を完了してください。';
-                emailVerifiedInput.value = email;
-            } else {
-                responseMessage.textContent = `エラー: ${result.message || 'メールアドレスの認証に失敗しました。'}`;
-            }
-        });
-    }
 
     const urlParams = new URLSearchParams(window.location.search);
     const token = urlParams.get('token');
@@ -145,13 +54,15 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     const productList = document.getElementById('product-list');
+    const itemsPerPage = 20; // 1ページあたりのアイテム数
+    let currentPage = 1;
 
     function addProductCard(product) {
         const productCard = document.createElement('div');
         productCard.className = 'product-card';
         productCard.innerHTML = `
             <img src="${product.image}" alt="${product.name}">
-            <h2>${product.name}</h2>
+            <h3>${product.name}</h3>
         `;
         productCard.addEventListener('click', () => {
             window.location.href = `product-detail.html?id=${product.id}`;
@@ -160,91 +71,75 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function fetchProducts() {
-        const genre = document.getElementById('genre').value;
-        const minPrice = document.getElementById('min-price').value;
-        const maxPrice = document.getElementById('max-price').value;
-        const searchName = document.getElementById('search-name').value;
+        const genre = document.getElementById('genre') ? document.getElementById('genre').value : '';
+        const minPrice = document.getElementById('min-price') ? document.getElementById('min-price').value : 0;
+        const maxPrice = document.getElementById('max-price') ? document.getElementById('max-price').value : 1000000000;
+        const searchName = new URLSearchParams(window.location.search).get('search') || '';
 
         const queryParams = new URLSearchParams({
             genre,
             minPrice,
             maxPrice,
-            searchName
+            searchName,
+            limit: itemsPerPage,
+            offset: (currentPage - 1) * itemsPerPage
         });
 
         fetch(`/products?${queryParams.toString()}`)
             .then(response => response.json())
             .then(products => {
-                productList.innerHTML = '';
-                products.forEach(addProductCard);
+                if (productList) {
+                    productList.innerHTML = '';
+                    products.forEach(addProductCard);
+                }
             })
             .catch(error => console.error('Error fetching products:', error));
     }
 
+    const filterButton = document.getElementById('filter-button');
+    if (filterButton) {
+        filterButton.addEventListener('click', () => {
+            currentPage = 1;
+            fetchProducts();
+        });
+    }
+
+    const prevPageButton = document.getElementById('prev-page');
+    if (prevPageButton) {
+        prevPageButton.addEventListener('click', () => {
+            if (currentPage > 1) {
+                currentPage--;
+                fetchProducts();
+            }
+        });
+    }
+
+    const nextPageButton = document.getElementById('next-page');
+    if (nextPageButton) {
+        nextPageButton.addEventListener('click', () => {
+            currentPage++;
+            fetchProducts();
+        });
+    }
+
+    const genreSelect = document.getElementById('genre');
+    if (genreSelect) {
+        genreSelect.addEventListener('change', () => {
+            fetchProducts();
+        });
+    }
+
+    const genreParam = urlParams.get('genre');
+    if (genreSelect && genreParam) {
+        genreSelect.value = genreParam;
+    }
+
+    // 初回表示時に検索クエリが存在する場合はそのクエリを使って商品を検索
+    const initialSearchQuery = urlParams.get('search');
+    const headerSearchInput = document.getElementById('header-search-input');
+    if (headerSearchInput && initialSearchQuery) {
+        headerSearchInput.value = initialSearchQuery;
+    }
+
     fetchProducts();
-
-    document.getElementById('filter-button').addEventListener('click', fetchProducts);
-
-    const socket = new WebSocket('ws://localhost:3000');
-
-    socket.addEventListener('message', event => {
-        const newProduct = JSON.parse(event.data);
-        addProductCard(newProduct);
-    });
-
-    socket.addEventListener('open', () => {
-        console.log('WebSocket connection established');
-    });
-
-    socket.addEventListener('close', () => {
-        console.log('WebSocket connection closed');
-    });
-
-    const productDetail = document.getElementById('product-detail');
-
-    if (productDetail) {
-        const urlParams = new URLSearchParams(window.location.search);
-        const productId = urlParams.get('id');
-
-        if (productId) {
-            fetch(`/products/${productId}`)
-                .then(response => response.json())
-                .then(product => {
-                    productDetail.innerHTML = `
-                        <img src="${product.image}" alt="${product.name}">
-                        <h1>${product.name}</h1>
-                        <p>${product.description}</p>
-                        <p class="price">¥${product.price.toLocaleString()}</p>
-                    `;
-                })
-                .catch(error => console.error('Error fetching product details:', error));
-        } else {
-            productDetail.innerHTML = '<p>商品が見つかりませんでした。</p>';
-        }
-    }
-
-    // 新着商品の取得と表示
-    function fetchNewArrivals() {
-        fetch('/products/new')
-            .then(response => response.json())
-            .then(products => {
-                const newArrivals = document.getElementById('new-arrivals');
-                newArrivals.innerHTML = '';
-                products.forEach(product => {
-                    const productCard = document.createElement('div');
-                    productCard.className = 'product-card';
-                    productCard.innerHTML = `
-                        <img src="${product.image}" alt="${product.name}">
-                        <h3>${product.name}</h3>
-                    `;
-                    productCard.addEventListener('click', () => {
-                        window.location.href = `product-detail.html?id=${product.id}`;
-                    });
-                    newArrivals.appendChild(productCard);
-                });
-            })
-            .catch(error => console.error('Error fetching new arrivals:', error));
-    }
-
-    fetchNewArrivals();
 });

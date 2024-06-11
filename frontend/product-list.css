@@ -1,3 +1,4 @@
+/* 全体のスタイルをリセット */
 * {
     margin: 0;
     padding: 0;
@@ -10,33 +11,56 @@ body {
     background-color: #f4f4f4;
 }
 
-main {
-    margin-top: 60px; /* ヘッダーの高さと同じに設定 */
+.container {
+    display: flex;
     padding: 20px;
 }
 
-h1 {
-    text-align: center;
-    margin-bottom: 20px;
+.filters {
+    width: 20%;
+    padding-right: 20px;
+}
+
+.filters h2 {
+    margin-bottom: 10px;
+}
+
+.filters label {
+    display: block;
+    margin-bottom: 5px;
+}
+
+.filters input, .filters select, .filters button {
+    width: 100%;
+    margin-bottom: 10px;
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
 }
 
 .product-list {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
+    width: 80%;
+}
+
+.product-list h2 {
+    margin-bottom: 20px;
+}
+
+.product-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
 }
 
 .product-card {
     background-color: #fff;
     border: 1px solid #ccc;
     border-radius: 8px;
-    margin: 10px;
-    width: 200px;
     padding: 10px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     text-align: center;
-    cursor: pointer;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     transition: transform 0.2s;
+    cursor: pointer;
 }
 
 .product-card:hover {
@@ -48,7 +72,26 @@ h1 {
     border-radius: 8px;
 }
 
-.product-card h2 {
-    font-size: 18px;
+.product-card h3 {
+    font-size: 16px;
     margin: 10px 0;
+}
+
+.pagination {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.pagination button {
+    padding: 10px 20px;
+    margin: 0 5px;
+    border: 1px solid #007bff;
+    border-radius: 5px;
+    background-color: #007bff;
+    color: #fff;
+    cursor: pointer;
+}
+
+.pagination button:hover {
+    background-color: #0056b3;
 }
