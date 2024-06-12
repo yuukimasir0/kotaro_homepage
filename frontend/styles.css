@@ -236,6 +236,7 @@ footer {
 }
 
 .subcategory-list {
+    margin-top: -11px;
     display: none;
     list-style: none;
     padding: 0;
@@ -244,16 +245,16 @@ footer {
     left: 100%;
     border: 1px solid #ddd;
     border-radius: 5px;
-    background-color: #fff;
+    background-color: #f4f4f4;
     z-index: 10;
 }
 
 .category-list li:hover > .subcategory-list {
-    display: block;
+    display: inline-block;
 }
 
 .subcategory-list li {
-    display: block; /* 縦に表示するための設定 */
+    display: block;
     border-bottom: 1px solid #ddd;
 }
 

@@ -67,10 +67,18 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function performSearch() {
         const searchQuery = headerSearchInput.value.trim();
+        const urlParams = new URLSearchParams(window.location.search);
+
         if (searchQuery) {
-            window.location.href = `product-list.html?search=${encodeURIComponent(searchQuery)}`;
+            urlParams.set('search', searchQuery);
         } else {
-            window.location.href = `product-list.html`;
+            urlParams.delete('search');
+        }
+        if (window.location.pathname.includes('product-list.html')) {
+            const newUrl = `${window.location.pathname}?${urlParams.toString()}`;
+            window.location.href = newUrl;
+        } else {
+            window.location.href = `product-list.html?${urlParams.toString()}`;
         }
     }
 

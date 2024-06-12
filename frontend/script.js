@@ -23,13 +23,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
                     for (const [subgenre, subsubgenres] of Object.entries(subgenres)) {
                         const subgenreItem = document.createElement('li');
-                        subgenreItem.innerHTML = `<a href="product-list.html?genre=${genre}&subgenre=${subgenre}">${subgenre}</a>`;
+                        subgenreItem.innerHTML = `<a href="product-list.html?genre=${genre}&subgenre=${subgenre}">${subgenre}<span style="margin-left:auto;">＞</span></a>`;
                         const subsubgenreList = document.createElement('ul');
                         subsubgenreList.className = 'subcategory-list';
 
                         subsubgenres.forEach(subsubgenre => {
                             const subsubgenreItem = document.createElement('li');
-                            subsubgenreItem.innerHTML = `<a href="product-list.html?genre=${genre}&subgenre=${subgenre}&subsubgenre=${subsubgenre}">${subsubgenre}</a>`;
+                            subsubgenreItem.innerHTML = `<a href="product-list.html?genre=${genre}&subgenre=${subgenre}&subsubgenre=${subsubgenre}">${subsubgenre}<span style="margin-left:auto;">＞</span></a>`;
                             subsubgenreList.appendChild(subsubgenreItem);
                         });
 
