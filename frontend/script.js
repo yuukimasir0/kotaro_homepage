@@ -99,7 +99,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 updatePagination();
             })
             .catch(error => console.error('Error fetching products:', error));
-
     }
 
     function updatePagination() {
@@ -119,7 +118,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
         let startPage = Math.max(currentPage - 4, 1);
         let endPage = Math.min(currentPage + 4, totalPages);
-        console.log(endPage);
         if (endPage - startPage < 8) {
             if (startPage === 1) {
                 endPage = Math.min(startPage + 8, totalPages);
