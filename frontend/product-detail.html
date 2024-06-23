@@ -6,11 +6,112 @@
     <title>商品詳細</title>
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="product-detail.css">
-    <script src="script.js" defer></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
+    <script src="script.js" defer></script>    
+    <script src="header-footer.js" defer></script>
 </head>
 <body>
     <main>
-        <div id="product-detail" class="product-detail"></div>
+        <div class="product-detail-container">
+            <div class="product-image">
+                <div id="3d-model-container"></div> <!-- 3Dモデルの表示領域 -->
+            </div>
+            <div class="product-info">
+                <h1 id="product-name">商品名</h1>
+                <p id="product-description">商品説明</p>
+            </div>
+            <div class="product-purchase">
+                <p id="product-price" class="price">価格: ¥0</p>
+                <button id="add-to-cart">カートに追加</button>
+            </div>
+        </div>
+        <section class="related-products">
+            <h2>似ている商品</h2>
+            <div class="product-grid" id="related-products">
+                <!-- 似ている商品カードがここに表示されます -->
+            </div>
+        </section>
     </main>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const productId = urlParams.get('id');
+
+            if (productId) {
+                fetch(`/products/${productId}`)
+                    .then(response => response.json())
+                    .then(product => {
+                        document.getElementById('product-name').textContent = product.name;
+                        document.getElementById('product-price').textContent = `価格: ¥${product.price}`;
+                        document.getElementById('product-description').textContent = product.description;
+                        load3DModel("/models/GLB.glb"); // 3Dモデルをロード
+                        fetchRelatedProducts(product.genre_id);
+                    })
+                    .catch(error => console.error('Error fetching product details:', error));
+            }
+
+            document.getElementById('add-to-cart').addEventListener('click', () => {
+                // カートに追加する処理をここに追加
+                alert('カートに商品を追加しました。');
+            });
+        });
+
+        function fetchRelatedProducts(genreId) {
+            fetch(`/similer?genre_id=${genreId}`)
+                .then(response => response.json())
+                .then(products => {
+                    const relatedProducts = document.getElementById('related-products');
+                    relatedProducts.innerHTML = '';
+                    products.slice(0, 5).forEach(product => {
+                        const productCard = document.createElement('div');
+                        productCard.className = 'product-card';
+                        productCard.innerHTML = `
+                            <img src="${product.image}" alt="${product.name}">
+                            <h3>${product.name}</h3>
+                            <p class="price">¥${product.price}</p>
+                        `;
+                        productCard.addEventListener('click', () => {
+                            window.location.href = `product-detail.html?id=${product.id}`;
+                        });
+                        relatedProducts.appendChild(productCard);
+                    });
+                })
+                .catch(error => console.error('Error fetching related products:', error));
+        }
+
+        function load3DModel(modelPath) {
+            const container = document.getElementById('3d-model-container');
+            const width = container.clientWidth;
+            const height = 500;
+
+            const scene = new THREE.Scene();
+            const camera = new THREE.PerspectiveCamera(75, width / height, 0.1, 1000);
+            const renderer = new THREE.WebGLRenderer({ antialias: true });
+            renderer.setSize(width, height);
+            container.appendChild(renderer.domElement);
+
+            const controls = new THREE.OrbitControls(camera, renderer.domElement);
+
+            const light = new THREE.DirectionalLight(0xffffff, 1);
+            light.position.set(0, 1, 1).normalize();
+            scene.add(light);
+
+            const loader = new THREE.GLTFLoader();
+            loader.load(modelPath, function (gltf) {
+                scene.add(gltf.scene);
+                animate();
+            }, undefined, function (error) {
+                console.error('An error happened', error);
+            });
+            camera.position.z = 5;
+
+            function animate() {
+                requestAnimationFrame(animate);
+                renderer.render(scene, camera);
+            }
+        }
+    </script>
 </body>
 </html>

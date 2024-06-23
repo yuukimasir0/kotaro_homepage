@@ -4,12 +4,15 @@
     "description": "",
     "main": "main.rs",
     "scripts": {
-        "start": "cd backend && cargo r --release"
+      "start": "cd backend && cargo r --release"
     },
     "keywords": [],
     "author": "",
     "license": "ISC",
     "dependencies": {
+    },
+    "devDependencies": {
+      "concurrently": "^8.2.2"
     }
   }
   

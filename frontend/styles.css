@@ -41,7 +41,7 @@ header {
     align-items: center;
 }
 
-.search-bar input {
+search-bar input {
     padding: 5px;
     width: 300px;
     margin-right: 10px;
@@ -86,23 +86,63 @@ main {
 }
 
 .hero-banner {
-    background: url('images/sample.jpg') no-repeat center center/cover; /* ここに背景画像のパスを指定 */
+    position: relative;
     height: 300px;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    color: #fff;
-    text-align: center;
-    width: 100%;
+    overflow: hidden;
 }
 
-.hero-banner h1 {
+.hero-banner .slide {
+    display: none;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+    background-position: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    color: #fff;
+    text-align: center;
+}
+
+.hero-banner .slide h1 {
     font-size: 36px;
 }
 
-.hero-banner p {
+.hero-banner .slide p {
     font-size: 18px;
+}
+
+.hero-banner .prev,
+.hero-banner .next {
+    cursor: pointer;
+    position: absolute;
+    top: 50%;
+    width: auto;
+    padding: 16px;
+    margin-top: -22px;
+    color: white;
+    font-weight: bold;
+    font-size: 18px;
+    transition: 0.6s ease;
+    border-radius: 0 3px 3px 0;
+    user-select: none;
+}
+
+.hero-banner .prev {
+    left: 0;
+    border-radius: 3px 0 0 3px;
+}
+
+.hero-banner .next {
+    right: 0;
+    border-radius: 3px 0 0 3px;
+}
+
+.hero-banner .prev:hover,
+.hero-banner .next:hover {
+    background-color: rgba(0, 0, 0, 0.8);
 }
 
 .container {
@@ -147,6 +187,12 @@ main {
 .product-card h3 {
     font-size: 16px;
     margin: 10px 0;
+}
+
+.product-card .price {
+    font-size: 14px;
+    color: #888;
+    margin-bottom: 10px;
 }
 
 .view-all {
@@ -208,6 +254,7 @@ footer {
     border: 1px solid #ccc;
     border-radius: 5px;
 }
+
 .category-list {
     list-style: none;
     padding: 0;

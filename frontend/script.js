@@ -56,6 +56,7 @@ document.addEventListener('DOMContentLoaded', () => {
         productCard.innerHTML = `
             <img src="${product.image}" alt="${product.name}">
             <h3>${product.name}</h3>
+            <p class="price">¥${product.price}</p>
         `;
         productCard.addEventListener('click', () => {
             window.location.href = `product-detail.html?id=${product.id}`;
@@ -173,5 +174,29 @@ document.addEventListener('DOMContentLoaded', () => {
 
     document.getElementById('sort-order').addEventListener('change', fetchProducts);
     document.getElementById('filter-button').addEventListener('click', fetchProducts);
+
+    let currentSlide = 0;
+    const slides = document.querySelectorAll('.hero-banner .slide');
+
+    function showSlide(index) {
+        if (index >= slides.length) currentSlide = 0;
+        if (index < 0) currentSlide = slides.length - 1;
+        slides.forEach((slide, i) => {
+            slide.style.display = i === currentSlide ? 'block' : 'none';
+        });
+    }
+
+    function nextSlide() {
+        currentSlide++;
+        showSlide(currentSlide);
+    }
+
+    window.changeSlide = function (direction) {
+        currentSlide += direction;
+        showSlide(currentSlide);
+    };
+
+    showSlide(currentSlide);
+    setInterval(nextSlide, 5000); // 3秒ごとにスライドを切り替え
 });
 

@@ -131,6 +131,32 @@ async fn get_categories(pool: web::Data<Arc<Pool>>) -> impl Responder {
     HttpResponse::Ok().json(categories)
 }
 
+async fn get_similer(pool: web::Data<Arc<Pool>>, query: web::Query<HashMap<String, String>>) -> impl Responder {
+    let mut conn = pool.get_conn().expect("Failed to get connection from pool");
+    let mut sql_query = String::from("SELECT id, name, description, price, image, genre_id FROM products");
+    let mut params = vec![];
+
+    if let Some(genre_id) = query.get("genre_id") {
+        sql_query.push_str(" WHERE genre_id = ?");
+        params.push(genre_id.as_str());
+    }
+
+    let products: Vec<Product> = conn.exec_map(
+        &sql_query,
+        params,
+        |(id, name, description, price, image, genre_id)| Product {
+            id,
+            name,
+            description,
+            price,
+            image,
+            genre_id,
+        },
+    ).expect("Failed to execute query");
+
+    HttpResponse::Ok().json(products)
+}
+
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
     dotenv().ok();
@@ -147,6 +173,7 @@ async fn main() -> std::io::Result<()> {
             .route("/products/new", web::get().to(get_new_products))
             .route("/products/{id}", web::get().to(get_product_by_id))
             .route("/products", web::get().to(get_products))
+            .route("/similer", web::get().to(get_similer))
             .route("/categories", web::get().to(get_categories))
             .service(fs::Files::new("/", "../frontend").index_file("index.html"))
     })
