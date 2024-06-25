@@ -4,27 +4,18 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ホーム</title>
+    <link rel="stylesheet" href="index.css">
     <link rel="stylesheet" href="styles.css">
-    <script src="header-footer.js" defer></script>
-    <script src="script.js" defer></script>
 </head>
 <body>
     <main>
         <div class="hero-banner">
-            <div class="slide" style="background-image: url('images/sample1.jpg');">
-                <h1>Welcome to My Shop</h1>
-                <p>Welcome to My Shop</p>
+            <div class="slides-container">
+                <!-- スライドはJavaScriptで動的に生成されます -->
             </div>
-            <div class="slide" style="background-image: url('images/sample1.jpg');">
-                <h1>Special Offers</h1>
-                <p>Check out our special offers!</p>
+            <div class="dots">
+                <!-- ドットはJavaScriptで動的に生成されます -->
             </div>
-            <div class="slide" style="background-image: url('images/sample1.jpg');">
-                <h1>New Arrivals</h1>
-                <p>Discover our latest products!</p>
-            </div>
-            <button class="prev" onclick="changeSlide(-1)">&#10094;</button>
-            <button class="next" onclick="changeSlide(1)">&#10095;</button>
         </div>
         <div class="container">
             <aside class="filters">
@@ -48,63 +39,7 @@
             </section>
         </div>
     </main>
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            let currentSlide = 0;
-            const slides = document.querySelectorAll('.hero-banner .slide');
-
-            function showSlide(index) {
-                if (index >= slides.length) currentSlide = 0;
-                if (index < 0) currentSlide = slides.length - 1;
-                slides.forEach((slide, i) => {
-                    slide.style.display = i === currentSlide ? 'block' : 'none';
-                });
-            }
-
-            function nextSlide() {
-                currentSlide++;
-                showSlide(currentSlide);
-            }
-
-            window.changeSlide = function (direction) {
-                currentSlide += direction;
-                showSlide(currentSlide);
-            };
-
-            showSlide(currentSlide);
-            setInterval(nextSlide, 5000); // 3秒ごとにスライドを切り替え
-
-            function fetchNewArrivals() {
-                fetch('/products/new')
-                    .then(response => {
-                        if (!response.ok) {
-                            throw new Error('商品が見つかりませんでした。');
-                        }
-                        return response.json();
-                    })
-                    .then(products => {
-                        const newArrivals = document.getElementById('new-arrivals');
-                        newArrivals.innerHTML = '';
-                        products.forEach(product => {
-                            const productCard = document.createElement('div');
-                            productCard.className = 'product-card';
-                            productCard.innerHTML = `
-                                <img src="${product.image}" alt="${product.name}">
-                                <h3>${product.name}</h3>
-                                <p class="price">${product.price}円</p>
-                            `;
-                            productCard.addEventListener('click', () => {
-                                window.location.href = `product-detail.html?id=${product.id}`;
-                            });
-                            newArrivals.appendChild(productCard);
-                        });
-                    })
-                    .catch(error => console.error('Error fetching new arrivals:', error));
-            }
-
-            fetchNewArrivals();
-        });
-    </script>
+    <script src="header-footer.js"></script>
+    <script src="script.js"></script>
 </body>
 </html>
- 

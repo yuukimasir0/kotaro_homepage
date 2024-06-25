@@ -20,10 +20,8 @@
             </div>
             <div class="product-info">
                 <h1 id="product-name">商品名</h1>
-                <p id="product-description">商品説明</p>
-            </div>
-            <div class="product-purchase">
                 <p id="product-price" class="price">価格: ¥0</p>
+                <p id="product-description">商品説明</p>
                 <button id="add-to-cart">カートに追加</button>
             </div>
         </div>
@@ -64,7 +62,7 @@
                 .then(products => {
                     const relatedProducts = document.getElementById('related-products');
                     relatedProducts.innerHTML = '';
-                    products.slice(0, 5).forEach(product => {
+                    products.slice(0, 3).forEach(product => {
                         const productCard = document.createElement('div');
                         productCard.className = 'product-card';
                         productCard.innerHTML = `
@@ -83,8 +81,8 @@
 
         function load3DModel(modelPath) {
             const container = document.getElementById('3d-model-container');
-            const width = container.clientWidth;
-            const height = 500;
+            const width = 400;
+            const height = 400;
 
             const scene = new THREE.Scene();
             const camera = new THREE.PerspectiveCamera(75, width / height, 0.1, 1000);

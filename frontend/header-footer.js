@@ -8,7 +8,6 @@ document.addEventListener('DOMContentLoaded', () => {
                     <button id="header-search-button">検索</button>
                 </div>
                 <div class="cart">
-                    <a href="#"><i class="fas fa-shopping-cart"></i></a>
                     <span class="cart-count">0</span>
                 </div>
                 <div class="auth-buttons">
@@ -45,12 +44,12 @@ document.addEventListener('DOMContentLoaded', () => {
     const signupButton = document.getElementById('signup-btn');
     if (signupButton) {
         signupButton.addEventListener('click', () => {
-            window.location.href = 'register.html';
+            window.location.href = 'email.html';
         });
     }
 
     function checkLogin() {
-        return true; // ここをfalseにするとログインしていない状態になります
+        return false; // ここをfalseにするとログインしていない状態になります
     }
 
     if (checkLogin()) {

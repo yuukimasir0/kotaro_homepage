@@ -1,0 +1,36 @@
++------------+---------------+-----------+---------------+-------------+------------+-------------------+-----------------------------------------------+
+| TABLE_NAME | COLUMN_NAME   | DATA_TYPE | COLUMN_TYPE   | IS_NULLABLE | COLUMN_KEY | COLUMN_DEFAULT    | EXTRA                                         |
++------------+---------------+-----------+---------------+-------------+------------+-------------------+-----------------------------------------------+
+| Users      | user_number   | int       | int           | NO          | PRI        | NULL              | auto_increment                                |
+| Users      | id            | varchar   | varchar(50)   | NO          | UNI        | NULL              |                                               |
+| Users      | email         | varchar   | varchar(100)  | NO          | UNI        | NULL              |                                               |
+| Users      | password_hash | varchar   | varchar(255)  | NO          |            | NULL              |                                               |
+| Users      | postal_code   | varchar   | varchar(10)   | NO          |            | NULL              |                                               |
+| Users      | prefecture    | varchar   | varchar(50)   | NO          |            | NULL              |                                               |
+| Users      | city          | varchar   | varchar(100)  | NO          |            | NULL              |                                               |
+| Users      | address       | varchar   | varchar(255)  | NO          |            | NULL              |                                               |
+| Users      | phone         | varchar   | varchar(15)   | NO          | UNI        | NULL              |                                               |
+| Users      | created_at    | timestamp | timestamp     | YES         |            | CURRENT_TIMESTAMP | DEFAULT_GENERATED                             |
+| Users      | updated_at    | timestamp | timestamp     | YES         |            | CURRENT_TIMESTAMP | DEFAULT_GENERATED on update CURRENT_TIMESTAMP |
+| banners    | id            | int       | int           | NO          | PRI        | NULL              | auto_increment                                |
+| banners    | image         | varchar   | varchar(255)  | NO          |            | NULL              |                                               |
+| banners    | link          | varchar   | varchar(255)  | NO          |            | NULL              |                                               |
+| banners    | title         | varchar   | varchar(255)  | NO          |            | NULL              |                                               |
+| banners    | description   | varchar   | varchar(255)  | NO          |            | NULL              |                                               |
+| categories | id            | int       | int           | NO          | PRI        | NULL              | auto_increment                                |
+| categories | genre         | varchar   | varchar(255)  | NO          |            | NULL              |                                               |
+| categories | subgenre      | varchar   | varchar(255)  | YES         |            | NULL              |                                               |
+| categories | subsubgenre   | varchar   | varchar(255)  | YES         |            | NULL              |                                               |
+| products   | id            | int       | int           | NO          | PRI        | NULL              | auto_increment                                |
+| products   | name          | varchar   | varchar(255)  | NO          |            | NULL              |                                               |
+| products   | description   | text      | text          | YES         |            | NULL              |                                               |
+| products   | price         | decimal   | decimal(10,2) | NO          |            | NULL              |                                               |
+| products   | image         | varchar   | varchar(255)  | YES         |            | NULL              |                                               |
+| products   | genre_id      | int       | int           | YES         | MUL        | NULL              |                                               |
+| products   | created_at    | timestamp | timestamp     | YES         |            | CURRENT_TIMESTAMP | DEFAULT_GENERATED                             |
++------------+---------------+-----------+---------------+-------------+------------+-------------------+-----------------------------------------------+
+
+
+=== sample ===
+INSERT INTO categories (genre, subgenre, subsubgenre) VALUES ('ジャンル', 'サブジャンル', 'サブサブジャンル');
+INSERT INTO banners (image, link, title, description) VALUES ('images/sample.jpg', 'product-list.html', 'goto_productlist', 'test'); 

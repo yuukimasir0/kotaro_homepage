@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>認証コード確認</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="signup.css">
+    <script src="script.js" defer></script>
+    <script src="header-footer.js" defer></script>
+</head>
+<body>
+    <main>
+        <div class="container">
+            <h1>認証コード確認</h1>
+            <form id="verification-form">
+                <input type="hidden" id="verification-email" name="email">
+                    <input type="text" id="code" name="code" required>
+                <button type="submit">認証コード確認</button>
+            </form>
+            <div id="message"></div>
+        </div>
+    </main>
+</body>
+</html>

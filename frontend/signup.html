@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ユーザー情報登録</title>
+    <link rel="stylesheet" href="signup.css">
+    <link rel="stylesheet" href="styles.css">
+    <script src="script.js" defer></script>
+    <script src="header-footer.js" defer></script>
+</head>
+<body>
+    <main>
+        <div class="container">
+            <h1>ユーザー情報登録</h1>
+            <form id="signup-form">
+                <div class="form-group">
+                    <label for="first-name">姓</label>
+                    <input type="text" id="first-name" name="first-name" required>
+                    <label for="last-name">名</label>
+                    <input type="text" id="last-name" name="last-name" required>
+                </div>
+                <div class="form-group">
+                    <label for="username">ユーザー名</label>
+                    <input type="text" id="username" name="username" required>
+                </div>
+                <div class="form-groupll">
+                    <label for="password">パスワード</label>
+                    <input type="password" id="password" name="password" required>
+                </div>
+                <div class="form-group">
+                    <label for="password-confirm">パスワード確認</label>
+                    <input type="password" id="password-confirm" name="password-confirm" required>
+                </div>
+                <div class="form-groupll">
+                    <label for="postal-code">郵便番号</label>
+                    <input type="text" id="postal-code" name="postal-code" required>
+                </div>
+                <div class="form-groupll">
+                    <label for="prefecture">県</label>
+                    <input type="text" id="prefecture" name="prefecture" required>
+                </div>
+                <div class="form-groupll">
+                    <label for="city">市区町村</label>
+                    <input type="text" id="city" name="city" required>
+                </div>
+                <div class="form-groupll">
+                    <label for="address">番地</label>
+                    <input type="text" id="address" name="address" required>
+                </div>
+                <div class="form-group">
+                    <label for="building">建物名</label>
+                    <input type="text" id="building" name="building">
+                </div>
+                <div class="form-group">
+                    <label for="phone">電話番号</label>
+                    <input type="tel" id="phone" name="phone" required>
+                </div>
+                <button type="submit">登録</button>
+            </form>
+            <div id="message"></div>
+        </div>
+    </main>
+</body>
+</html>
